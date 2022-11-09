@@ -13,6 +13,8 @@ namespace EFCoreRelationships.Data
 
         public DbSet<Weapon> Weapons { get; set; }
 
+        public DbSet<Skill> Skills { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }

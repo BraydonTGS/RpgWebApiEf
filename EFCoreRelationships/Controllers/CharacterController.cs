@@ -26,9 +26,7 @@ namespace EFCoreRelationships.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Character>>> Get(int userId)
         {
-
-            var characters = await _context.Characters.Where(c => c.UserID == userId).Include(c => c.Weapon).ToListAsync();
-
+            var characters = await _context.Characters.Where(c => c.UserID == userId).Include(c => c.Weapon).Include(c => c.Skills).ToListAsync();
             return characters;
         }
 
@@ -73,6 +71,28 @@ namespace EFCoreRelationships.Controllers
 
             _context.Weapons.Add(newWeapon);
 
+            await _context.SaveChangesAsync();
+
+            return character;
+        }
+
+        // Post Method Add Skill//
+        [HttpPost("skill")]
+        public async Task<ActionResult<Character>> AddCharacterSkill(AddCharacterSkillDto request)
+        {
+            var character = await _context.Characters.Where(c => c.Id == request.CharacterId).Include(c => c.Skills).FirstOrDefaultAsync();
+            if (character == null)
+            {
+                return NotFound();
+            }
+
+            var skill = await _context.Skills.FindAsync(request.SkillId);
+            if (skill == null)
+            {
+                return NotFound();
+            }
+
+            character.Skills.Add(skill);
             await _context.SaveChangesAsync();
 
             return character;
