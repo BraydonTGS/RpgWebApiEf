@@ -26,6 +26,7 @@ namespace EFCoreRelationships.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Character>>> Get(int userId)
         {
+
             var characters = await _context.Characters.Where(c => c.UserID == userId).ToListAsync();
 
             return characters;
@@ -33,12 +34,25 @@ namespace EFCoreRelationships.Controllers
 
         // Post Method //
         [HttpPost]
-        public async Task<ActionResult<List<Character>>> Create(Character character)
+        public async Task<ActionResult<List<Character>>> Create(CreateCharacterDto request)
         {
-            _context.Characters.Add(character);
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var newCharacter = new Character();
+
+            newCharacter.Name = request.Name;
+            newCharacter.RpgClass = request.RpgClass;
+            newCharacter.User = user;
+
+            _context.Characters.Add(newCharacter);
+
             await _context.SaveChangesAsync();
 
-            return await Get(character.UserID);
+            return await Get(newCharacter.UserID);
         }
     }
 }

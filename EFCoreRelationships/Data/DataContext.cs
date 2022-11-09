@@ -11,6 +11,8 @@ namespace EFCoreRelationships.Data
 
         public DbSet<Character> Characters { get; set; }
 
+        public DbSet<Weapon> Weapons { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
