@@ -27,7 +27,7 @@ namespace EFCoreRelationships.Controllers
         public async Task<ActionResult<List<Character>>> Get(int userId)
         {
 
-            var characters = await _context.Characters.Where(c => c.UserID == userId).ToListAsync();
+            var characters = await _context.Characters.Where(c => c.UserID == userId).Include(c => c.Weapon).ToListAsync();
 
             return characters;
         }
@@ -53,6 +53,29 @@ namespace EFCoreRelationships.Controllers
             await _context.SaveChangesAsync();
 
             return await Get(newCharacter.UserID);
+        }
+
+        // Post Method Create Weapon//
+        [HttpPost("weapon")]
+        public async Task<ActionResult<Character>> CreateWeapon(CreateWeaponDto request)
+        {
+            var character = await _context.Characters.FindAsync(request.CharacterId);
+            if (character == null)
+            {
+                return NotFound();
+            }
+
+            var newWeapon = new Weapon();
+
+            newWeapon.Name = request.Name;
+            newWeapon.Damage = request.Damage;
+            newWeapon.Character = character;
+
+            _context.Weapons.Add(newWeapon);
+
+            await _context.SaveChangesAsync();
+
+            return character;
         }
     }
 }

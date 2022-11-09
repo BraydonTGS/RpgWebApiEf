@@ -19,7 +19,6 @@ namespace EFCoreRelationships.Models
 
         public Weapon Weapon { get; set; }
 
-        public int WeaponId { get; set; }
 
     }
 }
