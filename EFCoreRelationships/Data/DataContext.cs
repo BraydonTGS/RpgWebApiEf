@@ -9,6 +9,8 @@ namespace EFCoreRelationships.Data
         // Add the DataBase Sets //
         DbSet<User> Users { get; set; }
 
+        DbSet<Character> Characters { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
